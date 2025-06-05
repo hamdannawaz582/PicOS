@@ -1,5 +1,5 @@
 ## Short Term
-- [ ] exit, kill, getpid SVCalls & Process Termination
+- [ ] exit, kill, getpid, yield SVCalls & Process Termination
 - [x] Proc 0
 - [x] Loading procs from functions
 - [ ] Context Switching & Scheduling (FCFS)

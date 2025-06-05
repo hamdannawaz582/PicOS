@@ -2,7 +2,7 @@
 #include "pico/stdlib.h"
 #include "malloc.h"
 
-int currentPID = 0;
+Proc * current = NULL;
 
 CircularQueue * runningQueue = NULL;
 CircularQueue * blockedQueue = NULL;
@@ -30,6 +30,8 @@ Proc *next() {
     Proc * n = popHead(runningQueue);
     n = (n == NULL)?(p0):(n); // Just run P0 if no other proc
     n->state = RUNNING;
+    add(current);
+    current = n;
     return n;
 }
 

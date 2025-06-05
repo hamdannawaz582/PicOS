@@ -3,7 +3,7 @@
 
 #include "queues.h"
 
-extern int currentPID;
+extern Proc * current;
 
 extern CircularQueue * runningQueue;
 extern CircularQueue * blockedQueue;
@@ -11,6 +11,7 @@ extern Proc * p0;
 
 void initScheduler();
 Proc * next();
+void add(Proc *);
 void proc0();
 
 #endif

@@ -1,7 +1,19 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
+#define SYSCALL_WRITE 0
+#define SYSCALL_READ 1
+#define SYSCALL_YIELD 2
+#define SYSCALL_EXIT 3
+#define SYSCALL_KILL 4
+#define SYSCALL_GETPID 5
+
+
+
 #include "stdio.h"
+#include "RP2040.h"
+#include "core_cm0plus.h"
+#include "pendsv.h"
 
 __attribute__((naked)) void syscall_handler(void) {
     __asm volatile (
@@ -32,8 +44,15 @@ void SVCall_Handler(uint32_t *stackframe, uint32_t lr) {
     printf("LR = %#010x\n", lr);
     printf("xPSR = %#010x\n", stackframe[7]);
     switch (r0) {
-        case 10:
-            
+        case SYSCALL_YIELD:
+            SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+            break;
+        case SYSCALL_EXIT:
+            current->state = KILLED;
+            SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+            break;
+        case SYSCALL_GETPID:
+            stackframe[0] = current->PID;
             break;
     }
 }

@@ -13,23 +13,23 @@ __attribute__((naked)) void pendsv_handler(void) {
         "mov r0, lr\n"
         "movs r1, #4\n"
         "tst r0, r1\n"
-        "bne use_psp\n"
+        "bne use_psp2\n"
         "mrs r0, msp\n"
-        "b done\n"
-        "use_psp:\n"
+        "b done2\n"
+        "use_psp2:\n"
         "mrs r0, psp\n"
-        "done:\n"
+        "done2:\n"
         "mov r1, lr\n"
-        "b PendSV_Handler\n"
+        "b PSV_Handler\n"
     );
 }
 
-void PendSV_Handler(uint32_t *stackframe, uint32_t lr) {
-    if (currentPID != 0) {
-        Proc * cp = getHead(runningQueue);
-        cp->lr = lr;
-        cp->sp = stackframe;
+void PSV_Handler(uint32_t *stackframe, uint32_t lr) {
+    printf("PendSV frfr ong\n");
+    if (current->PID != 0) {
+        
     }
+    SCB->ICSR = SCB_ICSR_PENDSVCLR_Msk;
 }
 
 #endif

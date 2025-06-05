@@ -12,6 +12,7 @@
 #include "malloc.h"
 #include "RP2040.h"
 #include "core_cm0plus.h"
+#include "pendsv.h"
 
 void make_svcall(uint32_t num) {
     switch (num) {
@@ -36,10 +37,10 @@ void blinker() {
         make_svcall(0);
         sleep_ms(1000);
         i++;
-        if (i == 15) {
+        if (i == 5) {
             __asm volatile (
-                "movs r0, #10\n"
-                "svc #10\n"
+                "movs r0, #2\n"
+                "svc #2\n"
             ); // exit syscall
         }
     }
@@ -49,7 +50,7 @@ void loadTestProc() {
     Proc * procptr = malloc(sizeof(Proc));
     procptr->PID = 1;
     procptr->state = RUNNING;
-    currentPID = 1;
+    current = procptr;
     procptr->stackbase = malloc(512); // 512 bytes for now
     procptr->sp = procptr->stackbase + 512;
     // addProcToQueue(procptr, runningQueue);
@@ -62,8 +63,8 @@ void loadTestProc() {
 int main() {
     stdio_init_all();
     // TODO: setup interrupts
-    // TODO: init syscalls
     exception_set_exclusive_handler(SVCALL_EXCEPTION, syscall_handler);
+    exception_set_exclusive_handler(PENDSV_EXCEPTION, pendsv_handler);
     
     initScheduler();
     loadTestProc();
