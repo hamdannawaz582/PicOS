@@ -21,14 +21,21 @@ __attribute__((naked)) void syscall_handler(void) {
         "use_psp:\n"
         "mrs r0, psp\n"
         "done:\n"
+        "mov r1, lr\n"
         "b SVCall_Handler\n"
     );
 }
 
-void SVCall_Handler(uint32_t *stackframe) {
+void SVCall_Handler(uint32_t *stackframe, uint32_t lr) {
     uint32_t r0 = stackframe[0]; // syscall number
     printf("Hit syscall %d\n", r0);
-
+    printf("LR = %#010x\n", lr);
+    printf("xPSR = %#010x\n", stackframe[7]);
+    switch (r0) {
+        case 10:
+            
+            break;
+    }
 }
 
 #endif

@@ -3,13 +3,14 @@
 
 #include "queues.h"
 
-extern QueueEntry * currentProc;
-extern QueueEntry * nextProc;
+extern int currentPID;
 
-extern CircularQueue * readyQueue;
 extern CircularQueue * runningQueue;
 extern CircularQueue * blockedQueue;
+extern Proc * p0;
 
 void initScheduler();
+Proc * next();
+void proc0();
 
 #endif

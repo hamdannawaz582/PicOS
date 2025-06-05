@@ -58,6 +58,7 @@ target_link_libraries(OS
         hardware_timer
         hardware_clocks
         hardware_exception
+        cmsis_core
         )
 
 pico_add_extra_outputs(OS)
