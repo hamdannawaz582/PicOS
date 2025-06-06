@@ -64,16 +64,10 @@ void loadTestProc() {
 
 int main() {
     stdio_init_all();
-    // TODO: setup interrupts
+
     exception_set_exclusive_handler(SVCALL_EXCEPTION, svc_handler_entry);
     exception_set_exclusive_handler(PENDSV_EXCEPTION, pendsv_handler_entry);
     
     initScheduler();
     loadTestProc();
-    printf("Testout \n");
-    char buff[1024];
-    sleep_ms(5000);
-    make_svcall(0);
-    printf("Returned From Syscall\n");
-
 }
