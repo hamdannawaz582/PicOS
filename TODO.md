@@ -6,7 +6,7 @@
 - [ ] Write, Read SVCalls
 - [ ] Loading embedded PIC ELFs
 - [ ] Pre-emptive scheduling (Round Robin)
-- [ ] Refactoring exceptions to a single exceptions.h file
+- [x] Refactoring exceptions to a single exceptions.h file
 - [ ] Filesystem (littleFS)
 - [ ] close, fstat, isatty, open, stat, unlink, link, lseek SVCalls
 - [ ] Loading PIC ELFs from FS
@@ -14,6 +14,7 @@
 - [ ] Way to send files to board (over UART)
 - [ ] HardFault handling
 - [ ] Update Write & Read SVCalls to work with files
+- [x] Add XINU-ish style comments
 
 ## Long Term
 - [ ] Semaphores

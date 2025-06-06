@@ -1,5 +1,6 @@
 #ifndef PROC_H
 #define PROC_H
+#include "stdint.h"
 
 #define RUNNING 1
 #define BLOCKED 0

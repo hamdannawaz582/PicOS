@@ -4,15 +4,16 @@
 #include "hardware/clocks.h"
 #include "hardware/uart.h"
 #include "scheduler.h"
-#include "scheduler.c"
+//#include "scheduler.c"
 #include "queues.h"
-#include "queues.c"
-#include "syscalls.h"
+//#include "queues.c"
+//#include "syscalls.h"
 #include "hardware/exception.h"
 #include "malloc.h"
 #include "RP2040.h"
 #include "core_cm0plus.h"
-#include "pendsv.h"
+//#include "pendsv.h"
+#include "exceptions.h"
 
 void make_svcall(uint32_t num) {
     switch (num) {
@@ -47,6 +48,7 @@ void blinker() {
 }
 
 void loadTestProc() {
+    printf("Loading Test Proc\n");
     Proc * procptr = malloc(sizeof(Proc));
     procptr->PID = 1;
     procptr->state = RUNNING;
@@ -63,8 +65,8 @@ void loadTestProc() {
 int main() {
     stdio_init_all();
     // TODO: setup interrupts
-    exception_set_exclusive_handler(SVCALL_EXCEPTION, syscall_handler);
-    exception_set_exclusive_handler(PENDSV_EXCEPTION, pendsv_handler);
+    exception_set_exclusive_handler(SVCALL_EXCEPTION, svc_handler_entry);
+    exception_set_exclusive_handler(PENDSV_EXCEPTION, pendsv_handler_entry);
     
     initScheduler();
     loadTestProc();
