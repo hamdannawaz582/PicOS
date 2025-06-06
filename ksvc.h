@@ -2,18 +2,12 @@
 #ifndef KSVC_H
 #define KSVC_H
 
-#define SYSCALL_WRITE 0
-#define SYSCALL_READ 1
-#define SYSCALL_YIELD 2
-#define SYSCALL_EXIT 3
-#define SYSCALL_KILL 4
-#define SYSCALL_GETPID 5
-
 #include "pico/stdlib.h"
 #include "stdio.h"
 
 #include "proc.h"
 #include "scheduler.h"
+#include "defs.h"
 
 /*----------------------------------------------------------------------
  * sys_write - writes a buffer to stdout                                

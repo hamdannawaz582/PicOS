@@ -10,6 +10,7 @@
 #include "scheduler.h"
 #include "proc.h"
 #include "ksvc.h"
+#include "defs.h"
 
 extern void svc_handler_entry(void);
 extern void pendsv_handler_entry(void);
