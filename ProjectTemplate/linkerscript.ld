@@ -1,3 +1,4 @@
+ENTRY(main)
 SECTIONS {
 	. = 0x0;
 
