@@ -3,7 +3,7 @@
 - [x] Proc 0
 - [x] Loading procs from functions
 - [ ] Context Switching & Scheduling (FCFS)
-- [ ] Write, Read SVCalls
+- [x] Write, Read SVCalls
 - [ ] Loading embedded PIC ELFs
 - [ ] Pre-emptive scheduling (Round Robin)
 - [x] Refactoring exceptions to a single exceptions.h file

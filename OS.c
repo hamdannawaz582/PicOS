@@ -42,6 +42,7 @@ void blinker() {
             __asm volatile (
                 "movs r0, #2\n"
                 "svc #2\n"
+                "movs r0, #0\n"
             ); // exit syscall
         }
     }

@@ -1,6 +1,5 @@
-# exception.s - svc_handler_entry, pendsv_handler_entry #
+# exception.s - svc_handler_entry, pendsv_handler_entry, pendsv_handler_end #
 .syntax unified
-.thumb_func
 .cpu cortex-m0plus
 
 .global svc_handler_entry
@@ -10,6 +9,7 @@
 .extern PSV_Handler
 .global pendsv_handler_end
 
+.thumb_func
  #----------------------------------------------------------------------
  # svc_handler_entry - entry point to the SVC handler
  #                   
@@ -20,7 +20,7 @@
  #  %r1 - Link register of calling process                               
  #----------------------------------------------------------------------
 svc_handler_entry:
-    mov r0, lr // link register
+    mov r0, lr
     movs r1, #4
 
     # Check stack bit of lr
@@ -39,9 +39,7 @@ svc_handler_entry:
     mov r1, r14
     b SVCall_Handler
 
-.syntax unified
 .thumb_func
-.cpu cortex-m0plus
  #----------------------------------------------------------------------
  # pendsv_handler_entry - entry point to the PendSV handler
  #                   
@@ -89,7 +87,8 @@ pendsv_handler_entry:
     mov r1, lr
     b PSV_Handler
 
-#----------------------------------------------------------------------
+.thumb_func
+ #----------------------------------------------------------------------
  # pendsv_handler_end - end point to the PendSV handler
  #                   
  # Input:
@@ -100,4 +99,22 @@ pendsv_handler_entry:
  #                                                          
  #----------------------------------------------------------------------
 pendsv_handler_end:
-    nop
+    mov lr, r1
+    # What's better than doing something horrific once? Doing it twice of
+    # course, this does what we did in pendsv_handler_entry but in the
+    # opposite direction to get the old stack back.
+    mov r1, r0
+    adds r0, #16
+    ldm r0!, {r4-r7}
+    mov r8, r4
+    mov r9, r5
+    mov r10, r6
+    mov r11, r7
+    mov r0, r1
+    ldm r0!, {r4-r7}
+    mov r0, r1
+    adds r0, #32
+
+    # Load PSP with the new stack pointer
+    msr psp, r0
+    bx lr

@@ -13,6 +13,7 @@
 
 extern void svc_handler_entry(void);
 extern void pendsv_handler_entry(void);
+extern void pendsv_handler_end(uint32_t *stackframe, uint32_t lr);
 
 /*----------------------------------------------------------------------
  * SVCall_Handler - calls respective SVC implementation based on number 
@@ -30,14 +31,22 @@ void SVCall_Handler(uint32_t *stackframe, uint32_t lr) {
     printf("xPSR = %#010x\n", stackframe[7]);
     switch (r0) {
         case SYSCALL_YIELD:
-            SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+            sys_yield();
             break;
         case SYSCALL_EXIT:
-            current->state = KILLED;
-            SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+            sys_exit();
             break;
         case SYSCALL_GETPID:
-            stackframe[0] = current->PID;
+            sys_getpid(stackframe);
+            break;
+        case SYSCALL_READ:
+
+            break;
+        case SYSCALL_WRITE:
+
+            break;
+        case SYSCALL_KILL:
+
             break;
     }
 }
@@ -58,6 +67,7 @@ void PSV_Handler(uint32_t *stackframe, uint32_t lr) {
         
     }
     SCB->ICSR = SCB_ICSR_PENDSVCLR_Msk;
+    pendsv_handler_end(stackframe, lr);
 }
 
 #endif
