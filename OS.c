@@ -15,6 +15,8 @@
 //#include "pendsv.h"
 #include "exceptions.h"
 
+Proc * current = NULL;
+
 void make_svcall(uint32_t num) {
     switch (num) {
         case 0:

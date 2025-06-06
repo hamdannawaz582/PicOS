@@ -117,4 +117,10 @@ pendsv_handler_end:
 
     # Load PSP with the new stack pointer
     msr psp, r0
+
+    # Remind xPSR we were in PendSV
+    // mrs r2, xPSR
+    // movs r0, #14 // 0xe 
+    // orrs r2, r2, r0
+    // msr xPSR, r2
     bx lr

@@ -66,8 +66,9 @@ void PSV_Handler(uint32_t *stackframe, uint32_t lr) {
     if (current->PID != 0) {
         
     }
+    Proc * np = next(stackframe, lr);
     SCB->ICSR = SCB_ICSR_PENDSVCLR_Msk;
-    pendsv_handler_end(stackframe, lr);
+    pendsv_handler_end(np->sp, np->lr);
 }
 
 #endif

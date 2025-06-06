@@ -5,7 +5,7 @@
 #define RUNNING 1
 #define BLOCKED 0
 #define READY 2
-#define KILLED -1
+#define KILLED 3
 
 typedef struct Proc {
     uint16_t PID;
@@ -13,6 +13,7 @@ typedef struct Proc {
     uint32_t * stackbase;
     uint32_t * sp;
     uint32_t lr;
+    uint32_t xPSR;
 } Proc;
 
 #endif

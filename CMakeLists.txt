@@ -38,8 +38,6 @@ pico_sdk_init()
 add_executable(OS 
     OS.c
     exceptions.S 
-    queues.c 
-    scheduler.c  
     )
 
 pico_set_program_name(OS "OS")

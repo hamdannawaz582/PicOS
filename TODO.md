@@ -1,8 +1,8 @@
 ## Short Term
-- [ ] exit, kill, getpid, yield SVCalls & Process Termination
+- [x] exit, kill, getpid, yield SVCalls & Process Termination
 - [x] Proc 0
 - [x] Loading procs from functions
-- [ ] Context Switching & Scheduling (FCFS)
+- [x] Context Switching & Scheduling (FCFS)
 - [x] Write, Read SVCalls
 - [ ] Loading embedded PIC ELFs
 - [ ] Pre-emptive scheduling (Round Robin)
