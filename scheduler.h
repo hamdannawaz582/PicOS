@@ -1,4 +1,4 @@
-/* scheduler.h - proc0, initScheduler, add, next */
+/* scheduler.h - proc0, initScheduler, add, next, createProc */
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
@@ -10,6 +10,7 @@ extern Proc * current;
 CircularQueue * runningQueue = NULL;
 CircularQueue * blockedQueue = NULL;
 Proc * p0 = NULL;
+int globalPID = 0;
 
 /*----------------------------------------------------------------------
  * proc0 - process to be used when no other is available for scheduling 
@@ -41,7 +42,7 @@ void initScheduler() {
     
     // Generating P0
     p0 = malloc(sizeof(Proc));
-    p0->PID = 0;
+    p0->PID = globalPID++;
     p0->stackbase = malloc(128); // Why not
     p0->sp = p0->stackbase + 128;
     p0->lr = 0xfffffffd;
@@ -87,5 +88,26 @@ Proc *next(uint32_t * stackframe, uint32_t lr) {
     return n;
 }
 
+/*----------------------------------------------------------------------
+ * createProc - adds a new process to the ready queue
+ * Input:
+ *  fptr        -   pointer to the function to be called by new proc
+ *  stacksize   -   stack size to be allocated for new proc
+ * 
+ * Output:
+ *                     
+ ----------------------------------------------------------------------*/
+void createProc(void * fptr, uint32_t stacksize) {
+    // TODO: Add support for command line arguments
+    Proc * newProc = malloc(sizeof(Proc));
+    newProc->PID = globalPID++;
+    newProc->stackbase = malloc(stacksize);
+    newProc->sp = newProc->stackbase + stacksize;
+    newProc->lr = 0xfffffffd;
+    newProc->sp[15] = 0x41000000; // Dummy xPSR value i got off of another process
+    newProc->sp[14] = (uint32_t) fptr;
+    newProc->state = READY;
+    add(newProc);
+}
 
 #endif

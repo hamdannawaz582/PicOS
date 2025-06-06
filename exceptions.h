@@ -46,7 +46,7 @@ void SVCall_Handler(uint32_t *stackframe, uint32_t lr) {
 
             break;
         case SYSCALL_KILL:
-
+            sys_kill(stackframe[1]);
             break;
     }
 }

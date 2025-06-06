@@ -42,18 +42,79 @@ void blinker() {
         i++;
         if (i == 5) {
             __asm volatile (
-                "movs r0, #2\n"
-                "svc #2\n"
+                "movs r0, #3\n"
+                "svc #3\n"
                 "movs r0, #0\n"
             ); // exit syscall
         }
     }
 }
 
+void p1(void) {
+    int i = 0;
+    while (1) {
+        sleep_ms(1000);
+        i++;
+        if (i == 5) {
+            i = 0;
+            __asm volatile (
+                "movs r0, #2\n"
+                "svc #2\n"
+            );
+        } else {
+            __asm volatile (
+                "movs r0, #15\n"
+                "svc #15\n"
+            );
+        }
+    }
+}
+
+void p2(void) {
+    int i = 0;
+    while (1) {
+        sleep_ms(1000);
+        i++;
+        if (i == 5) {
+            __asm volatile (
+                "movs r0, #4\n"
+                "movs r1, #1\n"
+                "svc #2\n"
+                "movs r0, #2\n"
+                "svc #2\n"
+            );
+        } else {
+            __asm volatile (
+                "movs r0, #16\n"
+                "svc #16\n"
+            );
+        }
+    }
+}
+
+void p3(void) {
+    int i = 0;
+    while (1) {
+        sleep_ms(1000);
+        i++;
+        if (i == 5) {
+            i = 0;
+            __asm volatile (
+                "movs r0, #2\n"
+                "svc #2\n"
+            );
+        } else {
+            __asm volatile (
+                "movs r0, #17\n"
+                "svc #17\n"
+            );
+        }
+    }
+}
 void loadTestProc() {
     printf("Loading Test Proc\n");
     Proc * procptr = malloc(sizeof(Proc));
-    procptr->PID = 1;
+    procptr->PID = globalPID++;
     procptr->state = RUNNING;
     current = procptr;
     procptr->stackbase = malloc(512); // 512 bytes for now
@@ -68,9 +129,32 @@ void loadTestProc() {
 int main() {
     stdio_init_all();
 
+    printf("\n\n\n\n"
+       "\033[1;32m"  // Bold green
+       "============================================================\n"
+       "======================  KERNEL STARTED  ====================\n"
+       "========================   PicOS   =========================\n"
+       "============================================================\n"
+       "\033[0m"  // Reset
+       "\n\n\n\n"
+    );
+
+    printf("\033[1;32m"  // Bold green
+       "Setting Exception Handlers...\n"
+       "\033[0m"  // Reset
+    );
     exception_set_exclusive_handler(SVCALL_EXCEPTION, svc_handler_entry);
     exception_set_exclusive_handler(PENDSV_EXCEPTION, pendsv_handler_entry);
     
+    printf("\033[1;32m"  // Bold green
+       "Initiating Scheduler...\n"
+       "\033[0m"  // Reset
+    );
+
+    printf("\n\n");
     initScheduler();
+    createProc(p1, 512);
+    createProc(p2, 512);
+    createProc(p3, 512);
     loadTestProc();
 }

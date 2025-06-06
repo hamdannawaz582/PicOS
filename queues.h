@@ -1,4 +1,4 @@
-/* queues.h - addProcToQueue, removeProcFromQueue, popHead */
+/* queues.h - addProcToQueue, popHead, removeProcFromQueue */
 #ifndef QUEUES_H
 #define QUEUES_H
 
@@ -38,19 +38,6 @@ void addProcToQueue(Proc *process, CircularQueue *queue) {
 }
 
 /*----------------------------------------------------------------------
- * removeProcFromQueue - removes a process from a given queue                       
- * Input:
- *  PID         -   PID of process to remove
- *  queue       -   Pointer to the queue to remove from
- *                                                                
- * Output:
- *  Proc *      -   Pointer to the process removed                                                               
- ----------------------------------------------------------------------*/
-Proc * removeProcFromQueue(int PID, CircularQueue *queue) {
-    return NULL;
-}
-
-/*----------------------------------------------------------------------
  * popHead - removes first process from a given queue                       
  * Input:
  *  queue       -   Pointer to the queue to remove from
@@ -61,10 +48,45 @@ Proc * removeProcFromQueue(int PID, CircularQueue *queue) {
 Proc * popHead(CircularQueue *queue) {
     if (queue->head == NULL) return NULL;
     QueueEntry * ret = queue->head;
-    queue->head = ret->next;
+    if (queue->head == queue->tail) {
+        queue->head = queue->tail = ret->next;
+    } else {
+        queue->head = ret->next;
+    }
     Proc * retval = ret->process;
     free(ret);
     return retval;
+}
+
+/*----------------------------------------------------------------------
+ * removeProcFromQueue - removes a process from a given queue                       
+ * Input:
+ *  PID         -   PID of process to remove
+ *  queue       -   Pointer to the queue to remove from
+ *                                                                
+ * Output:
+ *  Proc *      -   Pointer to the process removed                                                               
+ ----------------------------------------------------------------------*/
+Proc * removeProcFromQueue(int PID, CircularQueue *queue) {
+    if (!(queue->head)) return NULL;
+    if (queue->head->process->PID == PID) return popHead(queue);
+
+    QueueEntry * temp = queue->head;
+    while (temp->next && temp->next->process->PID != PID) {
+        temp = temp->next;
+    }
+
+    if (temp->next) {
+        QueueEntry * ret = temp->next;
+        if (ret == queue->tail) {
+            queue->tail = temp;
+        }
+        temp->next = ret->next;
+        Proc * result = ret->process;
+        free(ret);
+        return result;
+    }
+    return NULL;
 }
 
 #endif

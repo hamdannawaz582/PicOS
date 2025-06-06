@@ -66,8 +66,21 @@ inline void sys_exit(void) {
     SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
 }
 
-inline void sys_kill(int pid) {
-
+/*----------------------------------------------------------------------
+ * sys_kill - kills process with given PID
+ * Input: 
+ *  pid     -   PID of process to kill
+ * Output:
+ *  
+ ----------------------------------------------------------------------*/
+inline void sys_kill(uint32_t pid) {
+    if (pid == current->PID) {
+        current->state = KILLED;
+        SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+    } else {
+        // TODO: Deal with memory
+        Proc * result = removeProcFromQueue(pid, runningQueue); // Not freeing right now I have some ideas for this for later
+    }
 }
 
 /*----------------------------------------------------------------------
