@@ -27,9 +27,7 @@ extern void pendsv_handler_end(uint32_t *stackframe, uint32_t lr);
  ----------------------------------------------------------------------*/
 void SVCall_Handler(uint32_t *stackframe, uint32_t lr) {
     uint32_t r0 = stackframe[0]; // syscall number
-    printf("Hit syscall %d\n", r0);
-    printf("LR = %#010x\n", lr);
-    printf("xPSR = %#010x\n", stackframe[7]);
+    printf("DEBUG: Proc %d Hit syscall %d\n", current->PID, r0);
     switch (r0) {
         case SYSCALL_YIELD:
             sys_yield();
@@ -63,7 +61,7 @@ void SVCall_Handler(uint32_t *stackframe, uint32_t lr) {
  *  %r1         -   Link register of new proc                                                               
  ----------------------------------------------------------------------*/
 void PSV_Handler(uint32_t *stackframe, uint32_t lr) {
-    printf("PendSV frfr ong\n");
+    printf("DEBUG: Proc %d Hit PendSV\n", current->PID);
     if (current->PID != 0) {
         
     }

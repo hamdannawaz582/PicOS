@@ -1,6 +1,6 @@
 CC = arm-none-eabi-gcc
-CFLAGS = -fpic -nostdlib
-LDFLAGS = -T linkerscript.ld 
+CFLAGS = -fpic -nostdlib -mcpu=cortex-m0plus -mthumb
+LDFLAGS = -T linkerscript.ld -mcpu=cortex-m0plus -mthumb
 
 SRC = main.c 
 OBJ = main.o
