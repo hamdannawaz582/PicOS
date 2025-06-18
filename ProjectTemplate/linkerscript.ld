@@ -2,19 +2,19 @@ ENTRY(main)
 SECTIONS {
 	. = 0x0;
 
-	.text : {
+	.text : ALIGN(2){
 		*(.text*)
 	}
 
-	.rodata : {
+	.rodata : ALIGN(2){
 		*(.rodata*)
 	}
 
-	.data : {
+	.data : ALIGN(2){
 		*(.data*)
 	}
 
-	.bss : {
+	.bss : ALIGN(2){
 		*(.bss*)
 	}
 }

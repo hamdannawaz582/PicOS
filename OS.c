@@ -14,6 +14,8 @@
 #include "core_cm0plus.h"
 //#include "pendsv.h"
 #include "exceptions.h"
+#include "elf.h"
+#include "ProjectTemplate/program.h"
 
 Proc * current = NULL;
 
@@ -42,7 +44,7 @@ void blinker() {
         i++;
         if (i == 5) {
             __asm volatile (
-                "movs r0, #3\n"
+                "movs r0, #2\n"
                 "svc #3\n"
                 "movs r0, #0\n"
             ); // exit syscall
@@ -153,8 +155,9 @@ int main() {
 
     printf("\n\n");
     initScheduler();
-    createProc(p1, 512);
-    createProc(p2, 512);
-    createProc(p3, 512);
+    // createProc(p1, 512);
+    // createProc(p2, 512);
+    // createProc(p3, 512);
+    loadProgramFromELF((uint32_t)program_elf);
     loadTestProc();
 }

@@ -4,7 +4,7 @@
 - [x] Loading procs from functions
 - [x] Context Switching & Scheduling (FCFS)
 - [x] Write, Read SVCalls
-- [ ] Loading embedded PIC ELFs
+- [x] Loading embedded PIC ELFs
 - [ ] Pre-emptive scheduling (Round Robin)
 - [x] Refactoring exceptions to a single exceptions.h file
 - [ ] Filesystem (littleFS)
