@@ -7,7 +7,7 @@
 - [x] Loading embedded PIC ELFs
 - [ ] Pre-emptive scheduling (Round Robin)
 - [x] Refactoring exceptions to a single exceptions.h file
-- [ ] Filesystem (littleFS)
+- [x] Filesystem (littleFS)
 - [ ] close, fstat, isatty, open, stat, unlink, link, lseek SVCalls
 - [ ] Loading PIC ELFs from FS
 - [ ] Basic shell

@@ -1,4 +1,4 @@
-/* elf.h - */
+/* elf.h - loadProgramFromELF */
 #include "scheduler.h"
 
 #define EI_NIDENT 16

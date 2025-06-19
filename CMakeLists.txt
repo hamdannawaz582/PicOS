@@ -38,10 +38,14 @@ pico_sdk_init()
 add_executable(OS 
     OS.c
     exceptions.S 
+    external/littlefs/lfs.c
+    external/littlefs/lfs_util.c
     )
 
 pico_set_program_name(OS "OS")
 pico_set_program_version(OS "0.1")
+pico_set_binary_type(OS copy_to_ram)
+
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(OS 1)
@@ -63,6 +67,7 @@ target_link_libraries(OS
         hardware_exception
         cmsis_core
         hardware_regs
+        hardware_flash
         )
 
 pico_add_extra_outputs(OS)

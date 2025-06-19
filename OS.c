@@ -4,18 +4,15 @@
 #include "hardware/clocks.h"
 #include "hardware/uart.h"
 #include "scheduler.h"
-//#include "scheduler.c"
 #include "queues.h"
-//#include "queues.c"
-//#include "syscalls.h"
 #include "hardware/exception.h"
 #include "malloc.h"
 #include "RP2040.h"
 #include "core_cm0plus.h"
-//#include "pendsv.h"
 #include "exceptions.h"
 #include "elf.h"
 #include "ProjectTemplate/program.h"
+#include "fs.h"
 
 Proc * current = NULL;
 
@@ -153,11 +150,20 @@ int main() {
        "\033[0m"  // Reset
     );
 
+    printf("\033[1;32m"  // Bold green
+       "Initiating Filesystem...\n"
+       "\033[0m"  // Reset
+    );
+    int err = fs_init();
+
     printf("\n\n");
+    
     initScheduler();
-    // createProc(p1, 512);
-    // createProc(p2, 512);
-    // createProc(p3, 512);
+    createProc(p1, 512);
+    createProc(p2, 512);
+    createProc(p3, 512);
     loadProgramFromELF((uint32_t)program_elf);
     loadTestProc();
+
+    fs_close();
 }
