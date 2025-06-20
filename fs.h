@@ -13,6 +13,8 @@
 
 lfs_t fs;
 
+typedef lfs_file_t* fd_entry;
+
 /*----------------------------------------------------------------------
  * fs_erase - Wrapper to flash_range_erase, used to erase blocks of flash 
  * Input:

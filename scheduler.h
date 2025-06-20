@@ -4,6 +4,7 @@
 
 #include "proc.h"
 #include "queues.h"
+#include "defs.h"
 
 extern Proc * current;
 
@@ -107,6 +108,12 @@ void createProc(void * fptr, uint32_t stacksize) {
     newProc->sp[15] = 0x41000000; // Dummy xPSR value i got off of another process
     newProc->sp[14] = (uint32_t) fptr;
     newProc->state = READY;
+    newProc->PPID = current->PID;
+
+    for (int i = 0; i < MAXFILE; i++) {
+        newProc->FDTable[i] = NULL;
+    }
+
     add(newProc);
 }
 

@@ -1,6 +1,8 @@
 #ifndef PROC_H
 #define PROC_H
 #include "stdint.h"
+#include "fs.h"
+#include "defs.h"
 
 #define RUNNING 1
 #define BLOCKED 0
@@ -13,7 +15,9 @@ typedef struct Proc {
     uint32_t * stackbase;
     uint32_t * sp;
     uint32_t lr;
-    uint32_t xPSR;
+    
+    uint16_t PPID;
+    fd_entry FDTable[MAXFILE];
 } Proc;
 
 #endif
