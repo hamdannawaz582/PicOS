@@ -5,9 +5,40 @@
 
 #ifndef USE_UART1
     struct uart_inst * uart = uart0;
+    #define UART_BASE 0x40034000
 #else
     struct uart_inst * uart = uart1;
+    #define UART_BASE 0x40038000
 #endif
+
+/*----------------------------------------------------------------------
+ * uart_write_c - write a character to uart
+ * Input:
+ *  c       -   character to write
+ * 
+ * Output:
+ *                              
+ ----------------------------------------------------------------------*/
+void uart_write_c(char c) {
+    volatile uint32_t flagregister = UART_BASE + 0x018;
+    while (*(uint32_t *)flagregister & (1 << 5));
+
+    *(volatile uint32_t *)UART_BASE = c;
+}
+
+/*----------------------------------------------------------------------
+ * uart_read_char - reads a char from uart                              
+ * Input: 
+ *                                                                
+ * Output: 
+ *  char    -   character read                                                             
+ ----------------------------------------------------------------------*/
+char uart_read_c(void) {
+    volatile uint32_t flagregister = UART_BASE + 0x18;
+    while (*(uint32_t *)flagregister & (1 << 4));
+
+    return *(volatile uint32_t *)UART0_BASE & 0xFF;
+}
 
 /*----------------------------------------------------------------------
  * u_init - initializes uart connection
@@ -31,9 +62,9 @@ void u_init(void) {
 void uart_write(char * content) {
     for (; *content; content++) {
         if (*content == '\n') {
-            uart_putc(uart, '\r');
+            uart_write_c('\r');
         }
-        uart_putc(uart, *content);
+        uart_write_c(*content);
     }
 }
 
@@ -48,9 +79,9 @@ void uart_write(char * content) {
 void uart_write_n(char * content, int size) {
     for (int i = 0; *content && (i < size); i++, content++) {
         if (*content == '\n') {
-            uart_putc(uart, '\r');
+            uart_write_c('\r');
         }
-        uart_putc(uart, *content);
+        uart_write_c(*content);
     } 
 }
 
@@ -88,7 +119,17 @@ void uart_write_hex(uint32_t number) {
  *                            
  ----------------------------------------------------------------------*/
 void uart_read(char * buffer, int size) {
-
+    for (int i = 0; i < size; i++) {
+        char c = uart_read_c();
+        uart_write_c(c); // echo
+        if (c == '\r') { // clearing \r\n (ew)
+            buffer[i] = 0;
+            // uart_read_c();
+            uart_write_c('\n');
+            return;
+        }
+        buffer[i] = c;
+    }
 }
 
 /*----------------------------------------------------------------------
