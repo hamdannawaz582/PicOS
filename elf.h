@@ -1,5 +1,6 @@
 /* elf.h - loadProgramFromELF */
 #include "scheduler.h"
+#include "uart.h"
 
 #define EI_NIDENT 16
 #define PT_LOAD 1
@@ -62,12 +63,17 @@ void loadProgramFromELF(uint32_t elfStart) {
     }
 
 
-    printf("ELF Start at 0x%08X\n", (uint32_t)elfStart);
+    uart_write("ELF Start at ");
+    uart_write_hex((uint32_t)elfStart);
+    uart_write("\n");
+
     uint32_t entryPoint = elf->e_entry;
     uint32_t offset = entryPoint - loadaddr;
     entryPoint = elfStart + (uint32_t)offset + poff;
-    printf("ELF entry at 0x%08X\n", (uint32_t)entryPoint);
 
-    printf("First Instruction: 0x%04X\n", *(uint16_t *)((uint32_t)entryPoint & 0xfffffff0));
+    uart_write("ELF entry at ");
+    uart_write_hex((uint32_t)entryPoint);
+    uart_write("\n");
+
     createProc((void *)entryPoint, 512);
 }

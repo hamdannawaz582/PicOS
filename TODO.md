@@ -8,7 +8,7 @@
 - printf
 
 ### Roadmap
-- [ ] Replacing printf with custom UART write function
+- [x] Replacing printf with custom UART write function
 - [ ] Replacing getchar/putchar with custom implementations
 - [ ] Replacing malloc/free calls with hardcoded arrays
 - [ ] Setting system registers manually
