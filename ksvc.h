@@ -8,6 +8,7 @@
 #include "proc.h"
 #include "scheduler.h"
 #include "defs.h"
+#include "uart.h"
 
 /*----------------------------------------------------------------------
  * sys_write - writes a buffer to stdout                                
@@ -20,7 +21,7 @@
  *                                                               
  ----------------------------------------------------------------------*/
 inline void sys_write(int dest, char * buffer, int count) {
-    printf("%.*s\n", count, buffer);
+    uart_write_n(buffer, count);
 }
 
 /*----------------------------------------------------------------------

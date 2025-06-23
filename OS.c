@@ -6,11 +6,12 @@
 #include "exceptions.h"
 #include "fs.h"
 #include "init.h"
+#include "uart.h"
 
 Proc * current = NULL;
 
 void loadInitProc() {
-    printf("Loading Test Proc\n");
+    uart_write("Loading Test Proc\n");
     Proc * procptr = malloc(sizeof(Proc));
     procptr->PID = globalPID++;
     procptr->state = RUNNING;
@@ -25,8 +26,8 @@ void loadInitProc() {
 
 int main() {
     stdio_init_all();
-
-    printf("\n\n\n\n"
+    u_init();
+    uart_write("\n\n\n\n"
        "\033[1;32m"  // Bold green
        "============================================================\n"
        "======================  KERNEL STARTED  ====================\n"
@@ -36,34 +37,36 @@ int main() {
        "\n\n\n\n"
     );
 
-    printf("\033[1;32m"  // Bold green
+    
+
+    uart_write("\033[1;32m"  // Bold green
        "Setting Exception Handlers...\n"
        "\033[0m"  // Reset
     );
     exception_set_exclusive_handler(SVCALL_EXCEPTION, svc_handler_entry);
     exception_set_exclusive_handler(PENDSV_EXCEPTION, pendsv_handler_entry);
     
-    printf("\033[1;32m"  // Bold green
+    uart_write("\033[1;32m"  // Bold green
        "Initiating Scheduler...\n"
        "\033[0m"  // Reset
     );
     initScheduler();
 
 
-    printf("\033[1;32m"  // Bold green
+    uart_write("\033[1;32m"  // Bold green
        "Initiating Filesystem...\n"
        "\033[0m"  // Reset
     );
     int err = fs_init();
 
-    printf("\033[1;32m"  // Bold green
+    uart_write("\033[1;32m"  // Bold green
        "Running Init Process...\n"
        "\033[0m"  // Reset
     );
 
     loadInitProc();
 
-    printf("\n\n");
+    uart_write("\n\n");
     
     fs_close();
 }

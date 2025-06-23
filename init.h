@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "fs.h"
+#include "uart.h"
 
 void getline(char * buffer, size_t size) {
     char c;
@@ -36,15 +37,16 @@ void init(void) {
     char * commandbuffer = (char *)malloc(COMMANDSIZE*sizeof(char));
 
     while (1) {
-        printf("$ ");
+        uart_write("$ ");
         getline(commandbuffer, COMMANDSIZE);
         char * tok = strtok(commandbuffer, " \n");
         while (tok) {
-            printf("%s\n", tok);
+            uart_write(tok);
+            uart_write("\n");
             tok = strtok(NULL, " \n");
 
             if (strcmp(tok, "exit") == 0) {
-                printf("Shutting down...\n");
+                uart_write("Shutting down...\n");
                 fs_close();
                 __asm volatile (
                     "mov r0, #3\n"
