@@ -25,7 +25,6 @@ void loadInitProc() {
 }
 
 int main() {
-    stdio_init_all();
     u_init();
     uart_write("\n\n\n\n"
        "\033[1;32m"  // Bold green

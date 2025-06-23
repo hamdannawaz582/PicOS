@@ -9,7 +9,7 @@
 
 ### Roadmap
 - [x] Replacing printf with custom UART write function
-- [ ] Replacing getchar/putchar with custom implementations
+- [x] Replacing getchar/putchar with custom implementations
 - [ ] Replacing malloc/free calls with hardcoded arrays
 - [ ] Setting system registers manually
 - [ ] Basic hardfault handler definition

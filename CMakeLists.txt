@@ -48,7 +48,7 @@ pico_set_binary_type(OS copy_to_ram)
 
 
 # Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(OS 1)
+pico_enable_stdio_uart(OS 0)
 pico_enable_stdio_usb(OS 0)
 
 # Add the standard library to the build
