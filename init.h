@@ -15,7 +15,8 @@
 void getline(char * buffer, size_t size) {
     char c;
     int index = 0;
-    while (c = getchar()) {
+    while (c = uart_read_c()) {
+        uart_write_c(c);
         // Return at the end of a line
         if (c == 13 || c == EOF) {
             buffer[index] = 0;
@@ -38,13 +39,12 @@ void init(void) {
 
     while (1) {
         uart_write("$ ");
-        getline(commandbuffer, COMMANDSIZE);
+        uart_read(commandbuffer, COMMANDSIZE);
         char * tok = strtok(commandbuffer, " \n");
-        while (tok) {
+        while (tok != NULL) {
             uart_write(tok);
             uart_write("\n");
-            tok = strtok(NULL, " \n");
-
+            
             if (strcmp(tok, "exit") == 0) {
                 uart_write("Shutting down...\n");
                 fs_close();
@@ -53,6 +53,7 @@ void init(void) {
                     "svc #0\n"
                 );
             }
+            tok = strtok(NULL, " \n");
         }
     }
 }
