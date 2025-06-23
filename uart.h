@@ -1,15 +1,24 @@
 #ifndef UART_H
 #define UART_H
 
-#include <hardware/uart.h>
-
 #ifndef USE_UART1
-    struct uart_inst * uart = uart0;
     #define UART_BASE 0x40034000
+    #define UART_RST_BIT 22
 #else
-    struct uart_inst * uart = uart1;
     #define UART_BASE 0x40038000
+    #define UART_RST_BIT 23
 #endif
+
+#define RESET 0x4000c000
+#define RESET_SET RESET + 0x2000
+#define RESET_CLR RESET + 0x3000
+#define RESET_DONE RESET + 0x8
+#define CLOCK 0x40008000
+#define PERI_CLOCK CLOCK + 0x48
+#define UART_CONTROL UART_BASE + 0x30
+#define UART_LCR UART_BASE + 0x2c
+#define USERBANK_IO 0x40014000
+#define XOSC_REG 0x40024000
 
 /*----------------------------------------------------------------------
  * uart_write_c - write a character to uart
@@ -48,7 +57,47 @@ char uart_read_c(void) {
  *                                  
  ----------------------------------------------------------------------*/
 void u_init(void) {
-    uart_init(uart, 115200);
+    while(!(*(volatile uint32_t *)(XOSC_REG + 0x4) & (1 << 12))); // Waiting for XOSC to be enabled
+    while(!(*(volatile uint32_t *)(XOSC_REG + 0x4) & (1 << 31))); // Waiting for XOSC to stabilise
+
+    *(volatile uint32_t *)(RESET_CLR) = (1 << 5); // Clearing reset on I/O bank 0
+
+    while (!(*(volatile uint32_t *)(RESET_DONE) & (1 << 5)));
+
+    *(volatile uint32_t *)(RESET_SET) = (1 << UART_RST_BIT); // Resetting the UART
+    *(volatile uint32_t *)(RESET_CLR) = (1 << UART_RST_BIT); // Bringing the UART out of reset
+
+    while (!(*(volatile uint32_t *)(RESET_DONE) & (1 << UART_RST_BIT))); // Waiting for reset to complete
+
+    *(volatile uint32_t *)(PERI_CLOCK) = (1 << 11) | (1 << 7); // Enabling clock and setting crystal oscillator
+
+    *(volatile uint32_t *)(UART_CONTROL) = 0;
+
+    // Setting Baud rate to 115200
+    // Peripheral Clock Frequency / (16 * 115200) = 6.5104166667
+    // We need to set 6 into UARTIBRD and 0.51*64 + 0.5 = 33 into UARTFBRD
+    *(volatile uint32_t *)(UART_BASE + 0x24) = 6;
+    *(volatile uint32_t *)(UART_BASE + 0x28) = 33;
+
+    *(volatile uint32_t *)(UART_CONTROL) = 
+        (1 << 9) | // Enabling UART receive
+        (1 << 8) | // Enabling UART transmit
+        (1 << 0);  // Enabling UART as a whole
+
+    *(volatile uint32_t *)(UART_LCR) = 
+    // Setting word length to 8
+    (1 << 6) | (1 << 5) |
+    // Turning on FIFOs
+    (1 << 4);
+
+    // Assigning UART to GPIOs
+    #ifndef USE_UART1
+        *(volatile uint32_t *)(USERBANK_IO + 0x4) = 2;
+        *(volatile uint32_t *)(USERBANK_IO + 0x0c) = 2;
+    #else
+        *(volatile uint32_t *)(USERBANK_IO + 0x24) = 2;
+        *(volatile uint32_t *)(USERBANK_IO + 0x2c) = 2;
+    #endif
 }
 
 /*----------------------------------------------------------------------
