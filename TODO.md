@@ -11,11 +11,10 @@
 - [x] Replacing printf with custom UART write function
 - [x] Replacing getchar/putchar with custom implementations
 - [x] Replacing malloc/free calls with hardcoded arrays
-- [ ] Setting system registers manually
+- [x] Setting system registers manually
 - [ ] Basic hardfault handler definition
 - [ ] Basic systick definition
 - [ ] Setting interrupt vector table manually
-- [ ] Setting system registers manually
 - [ ] Booting manually (using the existing pico bootloader) + Makefile
 - [ ] Relocating kernel from flash to RAM
 - [ ] Flash reading/writing

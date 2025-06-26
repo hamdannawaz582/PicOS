@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/exception.h"
-#include "RP2040.h"
-#include "core_cm0plus.h"
 #include "exceptions.h"
 #include "fs.h"
 #include "init.h"
@@ -19,9 +17,19 @@ void loadInitProc() {
     current = procptr;
     procptr->stackbase = kmalloc(512); // 512 bytes for now
     procptr->sp = procptr->stackbase + 512;
-    __set_PSP((uint32_t)procptr->sp);
-    __set_CONTROL(__get_CONTROL() | (1 << 1));
-    __ISB();
+
+    __asm volatile (
+      "msr psp, %0\n"
+      "mrs r0, control\n"
+      "movs r1, #2\n" // I hate thumb16
+      "orr r0, r0, r1\n"
+      "msr control, r0\n"
+      "isb\n"
+      : 
+      : "r"((uint32_t)procptr->sp)
+      : "r0", "r1"
+    );
+
     init();
 }
 
