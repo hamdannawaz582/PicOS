@@ -53,6 +53,8 @@ int main() {
     );
     exception_set_exclusive_handler(SVCALL_EXCEPTION, svc_handler_entry);
     exception_set_exclusive_handler(PENDSV_EXCEPTION, pendsv_handler_entry);
+    exception_set_exclusive_handler(SYSTICK_EXCEPTION, systick_handler_entry);
+    exception_set_exclusive_handler(HARDFAULT_EXCEPTION, hardfault_handler_entry);
     
     uart_write("\033[1;32m"  // Bold green
        "Initiating Scheduler...\n"

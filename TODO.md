@@ -12,8 +12,8 @@
 - [x] Replacing getchar/putchar with custom implementations
 - [x] Replacing malloc/free calls with hardcoded arrays
 - [x] Setting system registers manually
-- [ ] Basic hardfault handler definition
-- [ ] Basic systick definition
+- [x] Basic hardfault handler definition
+- [x] Basic systick definition
 - [ ] Setting interrupt vector table manually
 - [ ] Booting manually (using the existing pico bootloader) + Makefile
 - [ ] Relocating kernel from flash to RAM

@@ -1,4 +1,4 @@
-# exception.s - svc_handler_entry, pendsv_handler_entry, pendsv_handler_end #
+# exception.s - svc_handler_entry, pendsv_handler_entry, pendsv_handler_end, systick_handler_entry, hardfault_handler_entry #
 .syntax unified
 .cpu cortex-m0plus
 
@@ -8,6 +8,12 @@
 .global pendsv_handler_entry
 .extern PSV_Handler
 .global pendsv_handler_end
+
+.global systick_handler_entry
+.extern Systick_Handler
+
+.global hardfault_handler_entry
+.extern HF_Handler
 
 .thumb_func
  #----------------------------------------------------------------------
@@ -124,3 +130,28 @@ pendsv_handler_end:
     // orrs r2, r2, r0
     // msr xPSR, r2
     bx lr
+
+.thumb_func 
+ #----------------------------------------------------------------------
+ # systick_handler_entry - entry point to the SysTick handler
+ #                   
+ # Input:       
+ #                                                        
+ # Output:                                                              
+ #                               
+ #----------------------------------------------------------------------
+systick_handler_entry:
+    b Systick_Handler
+
+.thumb_func
+ #----------------------------------------------------------------------
+ # systick_handler_entry - entry point to the HardFault handler
+ #                   
+ # Input:       
+ #                                                        
+ # Output:                                                              
+ #                               
+ #----------------------------------------------------------------------
+hardfault_handler_entry:
+    bkpt
+    b HF_Handler
