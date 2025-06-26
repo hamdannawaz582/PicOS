@@ -5,6 +5,7 @@
 #include "proc.h"
 #include "queues.h"
 #include "defs.h"
+#include "kmalloc.h"
 
 extern Proc * current;
 
@@ -36,15 +37,15 @@ void proc0() {
  ----------------------------------------------------------------------*/
 void initScheduler() {
     // Allocating Queues
-    runningQueue = malloc(sizeof(CircularQueue));
+    runningQueue = kmalloc(sizeof(CircularQueue));
     runningQueue->head = runningQueue->tail = NULL;
-    blockedQueue = malloc(sizeof(CircularQueue));
+    blockedQueue = kmalloc(sizeof(CircularQueue));
     blockedQueue->head = blockedQueue->tail = NULL;
     
     // Generating P0
-    p0 = malloc(sizeof(Proc));
+    p0 = kmalloc(sizeof(Proc));
     p0->PID = globalPID++;
-    p0->stackbase = malloc(128); // Why not
+    p0->stackbase = kmalloc(128); // Why not
     p0->sp = p0->stackbase + 128;
     p0->lr = 0xfffffffd;
     p0->sp[15] = 0x41000000; // Dummy xPSR value i got off of another process
@@ -100,9 +101,9 @@ Proc *next(uint32_t * stackframe, uint32_t lr) {
  ----------------------------------------------------------------------*/
 void createProc(void * fptr, uint32_t stacksize) {
     // TODO: Add support for command line arguments
-    Proc * newProc = malloc(sizeof(Proc));
+    Proc * newProc = kmalloc(sizeof(Proc));
     newProc->PID = globalPID++;
-    newProc->stackbase = malloc(stacksize);
+    newProc->stackbase = kmalloc(stacksize);
     newProc->sp = newProc->stackbase + stacksize;
     newProc->lr = 0xfffffffd;
     newProc->sp[15] = 0x41000000; // Dummy xPSR value i got off of another process

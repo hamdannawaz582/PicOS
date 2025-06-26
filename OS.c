@@ -7,16 +7,17 @@
 #include "fs.h"
 #include "init.h"
 #include "uart.h"
+#include "kmalloc.h"
 
 Proc * current = NULL;
 
 void loadInitProc() {
     uart_write("Loading Test Proc\n");
-    Proc * procptr = malloc(sizeof(Proc));
+    Proc * procptr = kmalloc(sizeof(Proc));
     procptr->PID = globalPID++;
     procptr->state = RUNNING;
     current = procptr;
-    procptr->stackbase = malloc(512); // 512 bytes for now
+    procptr->stackbase = kmalloc(512); // 512 bytes for now
     procptr->sp = procptr->stackbase + 512;
     __set_PSP((uint32_t)procptr->sp);
     __set_CONTROL(__get_CONTROL() | (1 << 1));

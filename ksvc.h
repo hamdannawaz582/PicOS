@@ -9,6 +9,7 @@
 #include "scheduler.h"
 #include "defs.h"
 #include "uart.h"
+#include "kmalloc.h"
 
 /*----------------------------------------------------------------------
  * sys_write - writes a buffer to stdout                                
@@ -122,7 +123,7 @@ inline void sys_open(uint32_t * stackframe) {
         return;
     }
 
-    current->FDTable[i] = malloc(sizeof(lfs_file_t));
+    current->FDTable[i] = kmalloc(sizeof(lfs_file_t));
     int err = lfs_file_open(&fs, current->FDTable[i], (const char *)stackframe[1], stackframe[2]);
     if (err) {
         stackframe[0] = EINVAL;

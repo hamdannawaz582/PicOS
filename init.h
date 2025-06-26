@@ -11,6 +11,7 @@
 #include <string.h>
 #include "fs.h"
 #include "uart.h"
+#include "kmalloc.h"
 
 void getline(char * buffer, size_t size) {
     char c;
@@ -35,7 +36,7 @@ void getline(char * buffer, size_t size) {
 
 void init(void) {
     size_t COMMANDSIZE = 256;
-    char * commandbuffer = (char *)malloc(COMMANDSIZE*sizeof(char));
+    char * commandbuffer = (char *)kmalloc(COMMANDSIZE*sizeof(char));
 
     while (1) {
         uart_write("$ ");

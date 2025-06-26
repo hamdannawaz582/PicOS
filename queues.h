@@ -4,7 +4,7 @@
 
 #include "proc.h"
 #include "pico/stdlib.h"
-#include "malloc.h"
+#include "kmalloc.h"
 
 typedef struct QueueEntry {
     Proc * process;
@@ -27,9 +27,9 @@ typedef struct CircularQueue {
  ----------------------------------------------------------------------*/
 void addProcToQueue(Proc *process, CircularQueue *queue) {
     if (queue->head == NULL) {
-        queue->head = queue->tail = malloc(sizeof(QueueEntry)); // Allocate memory enough for a QueueEntry
+        queue->head = queue->tail = kmalloc(sizeof(QueueEntry)); // Allocate memory enough for a QueueEntry
     } else {
-        queue->tail->next = malloc(sizeof(QueueEntry));
+        queue->tail->next = kmalloc(sizeof(QueueEntry));
         queue->tail = queue->tail->next;
     }
     // Add process to tail
@@ -54,7 +54,7 @@ Proc * popHead(CircularQueue *queue) {
         queue->head = ret->next;
     }
     Proc * retval = ret->process;
-    free(ret);
+    kfree(ret);
     return retval;
 }
 
@@ -83,7 +83,7 @@ Proc * removeProcFromQueue(int PID, CircularQueue *queue) {
         }
         temp->next = ret->next;
         Proc * result = ret->process;
-        free(ret);
+        kfree(ret);
         return result;
     }
     return NULL;
