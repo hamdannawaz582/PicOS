@@ -47,7 +47,7 @@ inline void sys_read(int source, char * buffer, int count) {
  *                 
  ----------------------------------------------------------------------*/
 inline void sys_yield(void) {
-    SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+    *(uint32_t *)ICSRPOS = PSVSET;
 }
 
 /*----------------------------------------------------------------------
@@ -59,7 +59,7 @@ inline void sys_yield(void) {
  ----------------------------------------------------------------------*/
 inline void sys_exit(void) {
     current->state = KILLED;
-    SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+    *(uint32_t *)ICSRPOS = PSVSET;
 }
 
 /*----------------------------------------------------------------------
@@ -72,7 +72,7 @@ inline void sys_exit(void) {
 inline void sys_kill(uint32_t pid) {
     if (pid == current->PID) {
         current->state = KILLED;
-        SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+        *(uint32_t *)ICSRPOS = PSVSET;
     } else {
         // TODO: Deal with memory
         Proc * result = removeProcFromQueue(pid, runningQueue); // Not freeing right now I have some ideas for this for later

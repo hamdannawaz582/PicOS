@@ -2,8 +2,6 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
-#include "RP2040.h"
-#include "core_cm0plus.h"
 #include "stdio.h"
 #include "pico/stdlib.h"
 
@@ -11,6 +9,7 @@
 #include "proc.h"
 #include "ksvc.h"
 #include "defs.h"
+
 
 extern void svc_handler_entry(void);
 extern void pendsv_handler_entry(void);
@@ -64,7 +63,9 @@ void PSV_Handler(uint32_t *stackframe, uint32_t lr) {
         
     }
     Proc * np = next(stackframe, lr);
-    SCB->ICSR = SCB_ICSR_PENDSVCLR_Msk;
+
+    *(uint32_t *)ICSRPOS = PSVCLEAR;
+
     pendsv_handler_end(np->sp, np->lr);
 }
 

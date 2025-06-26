@@ -17,4 +17,9 @@
     #define EINVAL -1 // File does not exist
     #define EFLIMIT -2 // Max number of files open
 
+
+// Board Addresses
+#define ICSRPOS 0xE000ED04
+#define PSVCLEAR 0x08000000
+#define PSVSET 0x10000000
 #endif
