@@ -6,12 +6,10 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include <pico/stdlib.h>
-#include <stdio.h>
-#include <string.h>
+
 #include "fs.h"
 #include "uart.h"
-#include "kmalloc.h"
+#include "klibc.h"
 
 void getline(char * buffer, size_t size) {
     char c;

@@ -2,14 +2,11 @@
 #ifndef KSVC_H
 #define KSVC_H
 
-#include "pico/stdlib.h"
-#include "stdio.h"
-
 #include "proc.h"
 #include "scheduler.h"
 #include "defs.h"
 #include "uart.h"
-#include "kmalloc.h"
+#include "klibc.h"
 
 /*----------------------------------------------------------------------
  * sys_write - writes a buffer to stdout                                

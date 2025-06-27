@@ -5,7 +5,7 @@
 #include "fs.h"
 #include "init.h"
 #include "uart.h"
-#include "kmalloc.h"
+#include "klibc.h"
 
 Proc * current = NULL;
 

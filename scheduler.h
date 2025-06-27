@@ -5,7 +5,7 @@
 #include "proc.h"
 #include "queues.h"
 #include "defs.h"
-#include "kmalloc.h"
+#include "klibc.h"
 
 extern Proc * current;
 

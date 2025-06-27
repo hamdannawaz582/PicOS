@@ -3,8 +3,7 @@
 #define QUEUES_H
 
 #include "proc.h"
-#include "pico/stdlib.h"
-#include "kmalloc.h"
+#include "klibc.h"
 
 typedef struct QueueEntry {
     Proc * process;
