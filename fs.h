@@ -2,14 +2,15 @@
 
 #ifndef FS_H
 #define FS_H
-#include <pico/stdlib.h>
-#include <pico/flash.h>
-#include <hardware/flash.h>
+
 #include "external/littlefs/lfs.h"
+#include "klibc.h"
 
 #define FS_BASE 0x10040000
 #define FS_SIZE 512*1024 // 512 KB (for now)
 #define FS_OFFSET FS_BASE - XIP_BASE
+#define PROG_SIZE 256
+#define SECTOR_SIZE 4096
 
 lfs_t fs;
 
@@ -26,7 +27,7 @@ typedef lfs_file_t* fd_entry;
  ----------------------------------------------------------------------*/
 int fs_erase(const struct lfs_config *c, lfs_block_t block) {
     int addr = c->block_size * block + FS_OFFSET;
-    flash_range_erase(addr, c->block_size);
+    // flash_range_erase(addr, c->block_size);
     return 0; // PicoSDK doesn't provide errors from flash_range functions
 }
 
@@ -44,7 +45,7 @@ int fs_erase(const struct lfs_config *c, lfs_block_t block) {
  ----------------------------------------------------------------------*/
 int fs_program(const struct lfs_config *c, lfs_block_t block, lfs_off_t offset, const void * buffer, lfs_size_t size) {
     uint32_t addr = c->block_size * block + offset + FS_OFFSET;
-    flash_range_program((uint32_t)addr, buffer, size);
+    // flash_range_program((uint32_t)addr, buffer, size);
     return 0;
 }
 
@@ -84,10 +85,10 @@ const struct lfs_config cfg = {
     .erase = fs_erase,
     .sync = fs_sync,
     .read_size = 1,
-    .prog_size = FLASH_PAGE_SIZE,
-    .block_size = FLASH_SECTOR_SIZE,
-    .block_count = FS_SIZE / FLASH_SECTOR_SIZE,
-    .cache_size = FLASH_SECTOR_SIZE / 4,
+    .prog_size = PROG_SIZE,
+    .block_size = SECTOR_SIZE,
+    .block_count = FS_SIZE / SECTOR_SIZE,
+    .cache_size = SECTOR_SIZE / 4,
     .lookahead_size = 32,
     .block_cycles = 500
 };
@@ -100,6 +101,7 @@ const struct lfs_config cfg = {
  *  int     -   Errorcode, 0 if no issues, err from lfs if error encountered       
  ----------------------------------------------------------------------*/
 int fs_init(void) {
+    return 0; // FIXME: Remove after making flash functions
     int err = lfs_mount(&fs, &cfg);
     if (err) {
         err = lfs_format(&fs, &cfg);
@@ -118,6 +120,7 @@ int fs_init(void) {
  *  int     -   Errorcode, guaranteed to be 0                                      
  ----------------------------------------------------------------------*/
 int fs_close(void) {
+    return 0; // FIXME: Remove after making flash functions
     lfs_unmount(&fs);
     return 0;
 }
