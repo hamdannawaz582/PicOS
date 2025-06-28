@@ -111,9 +111,9 @@ void createProc(void * fptr, uint32_t stacksize) {
     newProc->state = READY;
     newProc->PPID = current->PID;
 
-    for (int i = 0; i < MAXFILE; i++) {
-        newProc->FDTable[i] = NULL;
-    }
+    // for (int i = 0; i < MAXFILE; i++) {
+    //     newProc->FDTable[i] = NULL;
+    // }
 
     add(newProc);
 }

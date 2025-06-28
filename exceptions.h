@@ -2,9 +2,6 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
-#include "stdio.h"
-#include "pico/stdlib.h"
-
 #include "scheduler.h"
 #include "proc.h"
 #include "ksvc.h"

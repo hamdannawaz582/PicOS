@@ -1,11 +1,10 @@
-#include <stdio.h>
-#include "pico/stdlib.h"
-#include "hardware/exception.h"
-#include "exceptions.h"
-#include "fs.h"
 #include "init.h"
 #include "uart.h"
 #include "klibc.h"
+#include "scheduler.h"
+#include "exceptions.h"
+#include <stdbool.h>
+#include <stddef.h>
 
 Proc * current = NULL;
 
@@ -51,10 +50,6 @@ int main() {
        "Setting Exception Handlers...\n"
        "\033[0m"  // Reset
     );
-    exception_set_exclusive_handler(SVCALL_EXCEPTION, svc_handler_entry);
-    exception_set_exclusive_handler(PENDSV_EXCEPTION, pendsv_handler_entry);
-    exception_set_exclusive_handler(SYSTICK_EXCEPTION, systick_handler_entry);
-    exception_set_exclusive_handler(HARDFAULT_EXCEPTION, hardfault_handler_entry);
     
     uart_write("\033[1;32m"  // Bold green
        "Initiating Scheduler...\n"
@@ -63,11 +58,11 @@ int main() {
     initScheduler();
 
 
-    uart_write("\033[1;32m"  // Bold green
-       "Initiating Filesystem...\n"
-       "\033[0m"  // Reset
-    );
-    int err = fs_init();
+   //  uart_write("\033[1;32m"  // Bold green
+   //     "Initiating Filesystem...\n"
+   //     "\033[0m"  // Reset
+   //  );
+   //  int err = fs_init();
 
     uart_write("\033[1;32m"  // Bold green
        "Running Init Process...\n"
@@ -78,5 +73,9 @@ int main() {
 
     uart_write("\n\n");
     
-    fs_close();
+    // fs_close();
+}
+
+void kinit() {
+   main();
 }

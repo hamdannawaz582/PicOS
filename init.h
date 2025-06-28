@@ -7,9 +7,9 @@
 #define INIT_H
 
 
-#include "fs.h"
 #include "uart.h"
 #include "klibc.h"
+#include <stddef.h>
 
 void getline(char * buffer, size_t size) {
     char c;
@@ -17,7 +17,7 @@ void getline(char * buffer, size_t size) {
     while (c = uart_read_c()) {
         uart_write_c(c);
         // Return at the end of a line
-        if (c == 13 || c == EOF) {
+        if (c == 13 || c == 0) {
             buffer[index] = 0;
             return;
         }
@@ -39,21 +39,23 @@ void init(void) {
     while (1) {
         uart_write("$ ");
         uart_read(commandbuffer, COMMANDSIZE);
-        char * tok = strtok(commandbuffer, " \n");
-        while (tok != NULL) {
-            uart_write(tok);
-            uart_write("\n");
+        uart_write(commandbuffer);
+        uart_write("\n");
+        // char * tok = strtok(commandbuffer, " \n");
+        // while (tok != NULL) {
+        //     uart_write(tok);
+        //     uart_write("\n");
             
-            if (strcmp(tok, "exit") == 0) {
-                uart_write("Shutting down...\n");
-                fs_close();
-                __asm volatile (
-                    "mov r0, #3\n"
-                    "svc #0\n"
-                );
-            }
-            tok = strtok(NULL, " \n");
-        }
+        //     if (strcmp(tok, "exit") == 0) {
+        //         uart_write("Shutting down...\n");
+        //         fs_close();
+        //         __asm volatile (
+        //             "mov r0, #3\n"
+        //             "svc #0\n"
+        //         );
+        //     }
+        //     tok = strtok(NULL, " \n");
+        // }
     }
 }
 

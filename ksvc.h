@@ -108,25 +108,26 @@ inline void sys_getppid(uint32_t * stackframe) {
  * Output: 
  *  %r0         -   FD of opened file if successful, errorno if failed
  ----------------------------------------------------------------------*/
-inline void sys_open(uint32_t * stackframe) {
-    int i = 2;
-    for (; i < MAXFILE; i++) {
-        if (current->FDTable[i] == NULL) break;
-    }
+void sys_open(uint32_t * stackframe) {
+    stackframe[0] = EINVAL;
+    // int i = 2;
+    // for (; i < MAXFILE; i++) {
+    //     if (current->FDTable[i] == NULL) break;
+    // }
 
-    // If no slots available raise error
-    if (i == MAXFILE) {
-        stackframe[0] = EFLIMIT;
-        return;
-    }
+    // // If no slots available raise error
+    // if (i == MAXFILE) {
+    //     stackframe[0] = EFLIMIT;
+    //     return;
+    // }
 
-    current->FDTable[i] = kmalloc(sizeof(lfs_file_t));
-    int err = lfs_file_open(&fs, current->FDTable[i], (const char *)stackframe[1], stackframe[2]);
-    if (err) {
-        stackframe[0] = EINVAL;
-    } else {
-        stackframe[0] = 0;
-    }
+    // current->FDTable[i] = kmalloc(sizeof(lfs_file_t));
+    // int err = lfs_file_open(&fs, current->FDTable[i], (const char *)stackframe[1], stackframe[2]);
+    // if (err) {
+    //     stackframe[0] = EINVAL;
+    // } else {
+    //     stackframe[0] = 0;
+    // }
 }
 
 /*----------------------------------------------------------------------
@@ -137,22 +138,23 @@ inline void sys_open(uint32_t * stackframe) {
  * Output: 
  *  %r0         -   0 if successful, errorno if not
  ----------------------------------------------------------------------*/
-inline void sys_close(uint32_t * stackframe) {
+void sys_close(uint32_t * stackframe) {
     // Check to see if FD is in range of closable
-    if (stackframe[1] < 2 || stackframe[1] > 4) {
-        stackframe[0] = EINVAL;
-        return;
-    }
+    stackframe[0] = EINVAL;
+    // if (stackframe[1] < 2 || stackframe[1] > 4) {
+    //     stackframe[0] = EINVAL;
+    //     return;
+    // }
 
-    // Check to see if file is even open
-    if (current->FDTable[stackframe[1]] == NULL) {
-        stackframe[0] = EINVAL;
-        return;
-    }
+    // // Check to see if file is even open
+    // if (current->FDTable[stackframe[1]] == NULL) {
+    //     stackframe[0] = EINVAL;
+    //     return;
+    // }
 
-    lfs_file_close(&fs, current->FDTable[stackframe[1]]);
-    current->FDTable[stackframe[1]] = NULL;
-    stackframe[0] = 0;
+    // lfs_file_close(&fs, current->FDTable[stackframe[1]]);
+    // current->FDTable[stackframe[1]] = NULL;
+    // stackframe[0] = 0;
 }
 
 

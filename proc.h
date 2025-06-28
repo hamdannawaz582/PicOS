@@ -1,7 +1,6 @@
 #ifndef PROC_H
 #define PROC_H
-#include "stdint.h"
-#include "fs.h"
+#include <stdint.h>
 #include "defs.h"
 
 #define RUNNING 1
@@ -17,7 +16,7 @@ typedef struct Proc {
     uint32_t lr;
     
     uint16_t PPID;
-    fd_entry FDTable[MAXFILE];
+    // fd_entry FDTable[MAXFILE];
 } Proc;
 
 #endif
