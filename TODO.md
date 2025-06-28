@@ -14,8 +14,8 @@
 - [x] Setting system registers manually
 - [x] Basic hardfault handler definition
 - [x] Basic systick definition
-- [ ] Setting interrupt vector table manually
-- [ ] Booting manually (using the existing pico bootloader) + Makefile
+- [x] Setting interrupt vector table manually
+- [x] Booting manually (using the existing pico bootloader) + Makefile
 - [ ] Relocating kernel from flash to RAM
 - [ ] Flash reading/writing
 - [ ] Sleep (dread)
