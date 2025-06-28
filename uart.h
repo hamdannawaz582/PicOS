@@ -19,6 +19,10 @@
 #define UART_LCR UART_BASE + 0x2c
 #define USERBANK_IO 0x40014000
 #define XOSC_REG 0x40024000
+#define XOSC_SET XOSC_REG + 0x2000
+
+#include <stdbool.h>
+#include <stdint.h>
 
 /*----------------------------------------------------------------------
  * uart_write_c - write a character to uart
@@ -46,7 +50,7 @@ char uart_read_c(void) {
     volatile uint32_t flagregister = UART_BASE + 0x18;
     while (*(uint32_t *)flagregister & (1 << 4));
 
-    return *(volatile uint32_t *)UART0_BASE & 0xFF;
+    return *(volatile uint32_t *)UART_BASE & 0xFF;
 }
 
 /*----------------------------------------------------------------------
@@ -57,8 +61,14 @@ char uart_read_c(void) {
  *                                  
  ----------------------------------------------------------------------*/
 void u_init(void) {
+    *(volatile uint32_t *)(XOSC_REG) = (0xaa0 << 4); // Setting XOSC Freq to 1-15 MHz
+    *(volatile uint32_t *)(XOSC_REG + 0xc) = 47; // Startup delay
+    *(volatile uint32_t *)(XOSC_SET) = 0x00fab000; // Enable password
     while(!(*(volatile uint32_t *)(XOSC_REG + 0x4) & (1 << 12))); // Waiting for XOSC to be enabled
     while(!(*(volatile uint32_t *)(XOSC_REG + 0x4) & (1 << 31))); // Waiting for XOSC to stabilise
+
+    *(volatile uint32_t *)(CLOCK + 0x30) = 0x2; // Setting system reference clock to XOSC
+    *(volatile uint32_t *)(CLOCK + 0x3c) = 0x0; // Setting system clock to reference clock
 
     *(volatile uint32_t *)(RESET_CLR) = (1 << 5); // Clearing reset on I/O bank 0
 
@@ -67,7 +77,26 @@ void u_init(void) {
     *(volatile uint32_t *)(RESET_SET) = (1 << UART_RST_BIT); // Resetting the UART
     *(volatile uint32_t *)(RESET_CLR) = (1 << UART_RST_BIT); // Bringing the UART out of reset
 
-    while (!(*(volatile uint32_t *)(RESET_DONE) & (1 << UART_RST_BIT))); // Waiting for reset to complete
+    // FIXME: Figure out why the C code is hanging at RESET_DONE
+    // while (!((*(volatile uint32_t *)(RESET_DONE)) & (1 << UART_RST_BIT))); // Waiting for reset to complete
+
+    __asm volatile (
+        "uartrst:"
+        "mov r0, #0x4\n"
+        "lsl r0, r0, #16\n"
+        "mov r1, #0xc\n"
+        "orr r0, r0, r1\n"
+        "lsl r0, r0, #12\n"
+        "ldr r1, [r0, #8]\n"
+        "mov r0, r1\n"
+        "movs r1, #1\n"
+        "lsl r1, r1, #22\n"
+        "and r1, r1, r2\n"
+        "beq uartrst\n"
+        :
+        : 
+        : "r0", "r1", "r2"
+    );
 
     *(volatile uint32_t *)(PERI_CLOCK) = (1 << 11) | (1 << 7); // Enabling clock and setting crystal oscillator
 
