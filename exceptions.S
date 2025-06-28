@@ -15,6 +15,10 @@
 .global hardfault_handler_entry
 .extern HF_Handler
 
+.global nmi_handler
+
+.global ir_handler
+
 .thumb_func
  #----------------------------------------------------------------------
  # svc_handler_entry - entry point to the SVC handler
@@ -43,7 +47,11 @@ svc_handler_entry:
 
     svc_done:
     mov r1, r14
-    b SVCall_Handler
+    push {lr}
+    bl SVCall_Handler
+    pop {r1}
+    mov lr, r1
+    bx lr
 
 .thumb_func
  #----------------------------------------------------------------------
@@ -91,7 +99,11 @@ pendsv_handler_entry:
     # Restoring decremented stack pointer
     mov r0, r1
     mov r1, lr
-    b PSV_Handler
+    push {lr}
+    bl PSV_Handler
+    pop {r1}
+    mov lr, r1
+    b pendsv_handler_end
 
 .thumb_func
  #----------------------------------------------------------------------
@@ -141,7 +153,11 @@ pendsv_handler_end:
  #                               
  #----------------------------------------------------------------------
 systick_handler_entry:
-    b Systick_Handler
+    push {lr}
+    bl Systick_Handler
+    pop {r1}
+    mov lr, r1
+    bx lr
 
 .thumb_func
  #----------------------------------------------------------------------
@@ -154,4 +170,34 @@ systick_handler_entry:
  #----------------------------------------------------------------------
 hardfault_handler_entry:
     bkpt
-    b HF_Handler
+    push {lr}
+    bl HF_Handler
+    pop {r1}
+    mov lr, r1
+    bx lr
+
+.thumb_func
+ #----------------------------------------------------------------------
+ # nmi_handler - handler for nonmaskable interrupts
+ # 
+ # Input:
+ #  
+ # Output:
+ #                                           
+ #----------------------------------------------------------------------
+ nmi_handler:
+    bkpt
+    bx lr
+
+.thumb_func
+ #----------------------------------------------------------------------
+ # ir_handler - interrupt handler for interrupts 0 through 31
+ #
+ # Input:
+ #
+ # Output:
+ #           
+ #----------------------------------------------------------------------
+ir_handler:
+    bkpt
+    bx lr

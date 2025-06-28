@@ -10,7 +10,7 @@
 
 extern void svc_handler_entry(void);
 extern void pendsv_handler_entry(void);
-extern void pendsv_handler_end(uint32_t *stackframe, uint32_t lr);
+// extern void pendsv_handler_end(uint32_t *stackframe, uint32_t lr);
 extern void systick_handler_entry(void);
 extern void hardfault_handler_entry(void);
 
@@ -57,7 +57,7 @@ void SVCall_Handler(uint32_t *stackframe, uint32_t lr) {
  *  %r0         -   Top of stackframe of new proc
  *  %r1         -   Link register of new proc                                                               
  ----------------------------------------------------------------------*/
-void PSV_Handler(uint32_t *stackframe, uint32_t lr) {
+uint32_t * PSV_Handler(uint32_t *stackframe, uint32_t lr) {
     if (current->PID != 0) {
         
     }
@@ -65,7 +65,7 @@ void PSV_Handler(uint32_t *stackframe, uint32_t lr) {
 
     *(uint32_t *)ICSRPOS = PSVCLEAR;
 
-    pendsv_handler_end(np->sp, np->lr);
+    return np->sp;
 }
 
 /*----------------------------------------------------------------------
