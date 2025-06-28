@@ -18,7 +18,7 @@
  * Output:
  *                                                               
  ----------------------------------------------------------------------*/
-inline void sys_write(int dest, char * buffer, int count) {
+void sys_write(int dest, char * buffer, int count) {
     uart_write_n(buffer, count);
 }
 
@@ -32,8 +32,8 @@ inline void sys_write(int dest, char * buffer, int count) {
  * Output:
  *                                                               
  ----------------------------------------------------------------------*/
-inline void sys_read(int source, char * buffer, int count) {
-    scanf("%.*s", count, buffer);
+void sys_read(int source, char * buffer, int count) {
+    uart_read(buffer, count);
 }
 
 /*----------------------------------------------------------------------
@@ -43,7 +43,7 @@ inline void sys_read(int source, char * buffer, int count) {
  * Output:
  *                 
  ----------------------------------------------------------------------*/
-inline void sys_yield(void) {
+void sys_yield(void) {
     *(uint32_t *)ICSRPOS = PSVSET;
 }
 
@@ -54,7 +54,7 @@ inline void sys_yield(void) {
  * Output:
  *  
  ----------------------------------------------------------------------*/
-inline void sys_exit(void) {
+void sys_exit(void) {
     current->state = KILLED;
     *(uint32_t *)ICSRPOS = PSVSET;
 }
@@ -66,7 +66,7 @@ inline void sys_exit(void) {
  * Output:
  *  
  ----------------------------------------------------------------------*/
-inline void sys_kill(uint32_t pid) {
+void sys_kill(uint32_t pid) {
     if (pid == current->PID) {
         current->state = KILLED;
         *(uint32_t *)ICSRPOS = PSVSET;
@@ -84,7 +84,7 @@ inline void sys_kill(uint32_t pid) {
  * Output:
  *  %r0         -   PID of running process                          
  ----------------------------------------------------------------------*/
-inline void sys_getpid(uint32_t * stackframe) {
+void sys_getpid(uint32_t * stackframe) {
     stackframe[0] = current->PID;
 }
 
@@ -96,7 +96,7 @@ inline void sys_getpid(uint32_t * stackframe) {
  * Output: 
  *  %r0         -   PID of parent process
  ----------------------------------------------------------------------*/
-inline void sys_getppid(uint32_t * stackframe) {
+void sys_getppid(uint32_t * stackframe) {
     stackframe[0] = current->PPID;
 }
 
