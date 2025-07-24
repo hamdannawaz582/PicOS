@@ -3,7 +3,7 @@
 
 - [x] Move over boot code (init/main.c, board/vtable.S)
 - [ ] Create a proper Makefile
-- [ ] Move over linker script (board/linker.ld)
+- [x] Move over linker script (board/linker.ld)
 - [ ] Move over UART code (board/uart.c)
 - [ ] Move kernel from flash to RAM via boot.S
 - [x] Move over interrupt handling code (kernel/exceptions.c)
