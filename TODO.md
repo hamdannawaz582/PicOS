@@ -1,7 +1,7 @@
 ## Feature Parity Goals
 #### Meant to bring kernel to the same level as other branches
 
-- [ ] Move over boot code (init/main.c, board/vtable.S)
+- [x] Move over boot code (init/main.c, board/vtable.S)
 - [ ] Create a proper Makefile
 - [ ] Move over linker script (board/linker.ld)
 - [ ] Move over UART code (board/uart.c)
