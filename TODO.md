@@ -6,7 +6,7 @@
 - [ ] Move over linker script (board/linker.ld)
 - [ ] Move over UART code (board/uart.c)
 - [ ] Move kernel from flash to RAM via boot.S
-- [ ] Move over interrupt handling code (kernel/exceptions.c)
+- [x] Move over interrupt handling code (kernel/exceptions.c)
 - [ ] Move over scheduler and process code (kernel/scheduler.c, proc.h)
 - [ ] Move over SVCall code (kernel/svc.c)
 - [ ] Move over kernel utils (util/klibc.c)
