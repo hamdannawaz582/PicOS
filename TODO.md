@@ -2,7 +2,7 @@
 #### Meant to bring kernel to the same level as other branches
 
 - [x] Move over boot code (init/main.c, board/vtable.S)
-- [ ] Create a proper Makefile
+- [x] Create a proper Makefile
 - [x] Move over linker script (board/linker.ld)
 - [ ] Move over UART code (board/uart.c)
 - [ ] Move kernel from flash to RAM via boot.S

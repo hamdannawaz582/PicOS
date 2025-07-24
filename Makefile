@@ -1,2 +1,38 @@
-CC = arm-none-eabi-gcc
-CFLAGS = -nostdlib -ffreestanding -mcpu=cortex-m0plus -mthumb -std=gnu11 -Wall -Iinclude
+BOARD := RPi-Pico
+
+CC := arm-none-eabi-gcc
+LD := arm-none-eabi-ld
+
+CFLAGS := -nostdlib -ffreestanding -mcpu=cortex-m0plus -mthumb -std=gnu11 -Wall -Iinclude
+ASFLAGS := -mcpu=cortex-m0plus -mthumb -ffreestanding -nostdlib
+LDFLAGS := -Tsrc/board/$(BOARD)/linker.ld -nostdlib
+
+SRC_C := $(wildcard src/init/*.c src/kernel/*.c src/util/*.c src/board/$(BOARD)/*.c)
+SRC_ASM := $(wildcard src/board/$(BOARD)/*.S)
+OBJ_C := $(patsubst src/%.c, build/%.o, $(SRC_C))
+OBJ_ASM := $(patsubst src/%.S, build/%.o, $(SRC_ASM)) 
+
+OBJS := $(OBJ_C) $(OBJ_ASM)
+
+OUT := kernel.elf
+
+all: $(OUT)
+
+$(OUT): $(OBJ_C) $(OBJ_ASM)
+	@echo "[LD] $@"
+	$(LD) $(LDFLAGS) -o $@ $^
+
+build/%.o: src/%.c
+	@echo "[CC] $<"
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+build/%.o: src/%.S
+	@echo "[ASM] $<"
+	@mkdir -p $(dir $@)
+	$(CC) $(ASFLAGS) -c $< -o $@
+
+clean:
+	rm -rf build/ $(OUT)
+
+.PHONY: all clean
