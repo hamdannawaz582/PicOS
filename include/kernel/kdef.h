@@ -14,4 +14,11 @@
 
 #define MAXFILE 5
 
+/*
+ *  Errors by category
+ */
+
+// Reading & Writing
+#define EINVAL 22
+
 #endif
