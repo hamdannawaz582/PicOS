@@ -3,12 +3,12 @@ BOARD := RPi-Pico
 CC := arm-none-eabi-gcc
 LD := arm-none-eabi-ld
 
-CFLAGS := -nostdlib -ffreestanding -mcpu=cortex-m0plus -mthumb -std=gnu11 -Wall -Iinclude
+CFLAGS := -nostdlib -ffreestanding -mcpu=cortex-m0plus -mthumb -std=gnu11 -Wall -I./include
 ASFLAGS := -mcpu=cortex-m0plus -mthumb -ffreestanding -nostdlib
 LDFLAGS := -Tsrc/board/$(BOARD)/linker.ld -nostdlib
 
-SRC_C := $(wildcard src/init/*.c src/kernel/*.c src/util/*.c src/board/$(BOARD)/*.c)
-SRC_ASM := $(wildcard src/board/$(BOARD)/*.S)
+SRC_C := $(shell find src/init src/kernel src/util src/board/$(BOARD) src/driver -name '*.c')
+SRC_ASM := $(shell find src/board/$(BOARD)/*.S)
 OBJ_C := $(patsubst src/%.c, build/%.o, $(SRC_C))
 OBJ_ASM := $(patsubst src/%.S, build/%.o, $(SRC_ASM)) 
 
