@@ -17,9 +17,18 @@
 
 int32_t tty_putchar(char c) {
     volatile uint32_t flagregister = UART_BASE + 0x018;
+
+    if (c == '\n') c = '\r';
+
+    print:
     while (*(uint32_t *)flagregister & (1 << 5));
 
     *(volatile uint32_t *)UART_BASE = c;
+
+    if (c == '\r') {
+        c = '\n';
+        goto print;
+    }
 
     return 0;
 }
