@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 void printx(uint32_t number) {
-    char num[11];
+    char num[11] = {0};
     num[8] = 0;
     num[0] = '0';
     num[1] = 'x';
