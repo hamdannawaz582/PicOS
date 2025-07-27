@@ -48,6 +48,6 @@ SECTIONS {
         *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.bss*)))
         *(COMMON)
         . = ALIGN(4);
-        __bss_end__ = .;
+        __bss_end = .;
     } > RAM
 }

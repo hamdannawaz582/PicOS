@@ -10,11 +10,12 @@
 .extern systick_handler_entry
 .extern ir_handler
 .extern _dummy // Linker defined symbol
+.extern bss_zero
 
 .section .vtable, "ax"
 
 .word _sptr     // Stack Pointer
-.word kinit     // Reset Handler
+.word bss_zero     // Reset Handler
 .word nmi_handler
 .word hardfault_handler_entry
 .word _dummy
