@@ -10,15 +10,14 @@
 #define PROC_READY 2
 #define PROC_KILLED 3
 
-// Limits Defines
-
-#define MAXFILE 5
-
 /*
  *  Errors by category
  */
 
 // Reading & Writing
 #define EINVAL 22
+
+// Memory
+#define ENOMEM 23
 
 #endif

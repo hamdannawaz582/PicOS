@@ -57,6 +57,8 @@ void memset(void *dest, unsigned char c, size_t n);
 #define BRIGHT_WHITE   "\033[97m"
 
 #define CLEAR_SCREEN "\033[2J\033[H"
+#define RED_BACKGROUND "\x1B[41m"
+#define RESET_BACKGROUND "\x1B[0m"
 
 #define KERNEL_PRINT(str, ...) \
     printk("[" BRIGHT_GREEN "KERN" RESET "]\t" str "\n", ##__VA_ARGS__);
