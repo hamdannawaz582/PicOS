@@ -1,5 +1,5 @@
 #include <driver/tty.h>
-
+#include <board/loader.h>
 #include "util/klibc.h"
 
 extern int main(void);
@@ -17,5 +17,7 @@ void kinit() {
    run_all_tests();
    KERNEL_PRINT("Tests Completed");
    KERNEL_PRINT("Kernel Initialized");
-   main();
+
+   KERNEL_PRINT("Loading Kernel Proc");
+   load_kernel((void *)main);
 }

@@ -21,4 +21,4 @@ bss_zero:
     b l
 
     end:
-        b kinit
+        bl kinit
