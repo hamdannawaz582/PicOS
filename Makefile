@@ -3,9 +3,11 @@ BOARD := RPi-Pico
 CC := arm-none-eabi-gcc
 LD := arm-none-eabi-ld
 
-CFLAGS := -nostdlib -ffreestanding -mcpu=cortex-m0plus -mthumb -std=gnu11 -Wall -I./include
-ASFLAGS := -mcpu=cortex-m0plus -mthumb -ffreestanding -nostdlib
-LDFLAGS := -Tsrc/board/$(BOARD)/linker.ld -nostdlib
+CFLAGS := -nostdlib -ffreestanding -mcpu=cortex-m0plus -mthumb -std=gnu11 -Wall -I./include -g -lgcc
+ASFLAGS := -mcpu=cortex-m0plus -mthumb -ffreestanding -nostdlib -g
+LDFLAGS := -Tsrc/board/$(BOARD)/linker.ld -nostdlib -g
+
+LIBGCC := /opt/homebrew/lib/gcc/arm-none-eabi/15.1.0/thumb/v6-m/nofp/libgcc.a # TODO: don't hardcode this
 
 SRC_C := $(shell find src/init src/kernel src/util src/board/$(BOARD) src/driver -name '*.c')
 TEST_C := $(shell find tests -name '*.c')
@@ -18,11 +20,11 @@ OBJS := $(OBJ_C) $(OBJ_ASM) $(TEST_OBJ_C)
 
 OUT := kernel.elf
 
-all: $(OUT)
+all: kernel.elf
 
-$(OUT): $(OBJ_C) $(OBJ_ASM) $(TEST_OBJ_C)
+kernel.elf: $(OBJ_C) $(OBJ_ASM) $(TEST_OBJ_C)
 	@echo "[LD] $@"
-	$(LD) $(LDFLAGS) -o $@ $^
+	$(LD) $(LDFLAGS) -o $@ $^ $(LIBGCC)
 
 build/%.o: src/%.c
 	@echo "[CC] $<"

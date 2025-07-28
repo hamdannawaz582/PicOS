@@ -1,9 +1,27 @@
-/* printk.c - printx, printk */
+/* printk.c - printi, printx, printk */
 
 #include <stdarg.h>
 #include <util/klibc.h>
 #include <driver/tty.h>
 #include <stdint.h>
+
+void printi(int number) {
+    char num[10] = {0};
+
+    if (number < 0) {
+        tty_putchar('-');
+        number = -number;
+    }
+
+    int i = 9;
+
+    do {
+        num[i] = number % 10 + '0';
+        number /= 10;
+        i--;
+    } while (number && (i >= 0));
+    tty_puts(num + i + 1); // TODO: This can probably go wrong, add some checks maybe
+}
 
 void printx(uint32_t number) {
     char num[11] = {0};
@@ -36,13 +54,11 @@ void printk(const char *fmt, ...) {
                     tty_putchar(va_arg(ap, int));
                     break;
                 case 'd':
-                    // This requires idiv, which this processor does not support,
-                    // instead of doing a whole song and dance and using the fdiv
-                    // from the pico bootrom, I'm just not going to print ints.
-                    va_arg(ap, int);
+                    printi(va_arg(ap, int));
                     break;
                 case 'x':
                     printx(va_arg(ap, uint32_t));
+                    break;
             }
         } else {
             tty_putchar(*fmt);
