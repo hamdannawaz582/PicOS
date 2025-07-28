@@ -43,28 +43,29 @@ proc_t * get_next_proc() {
 uint32_t add_proc(uint8_t parent, uint32_t stack_base, uint32_t stack_pointer, uint32_t ELF_base, uint8_t flags, uint32_t entrypoint) {
     // DEBUG_PRINT("Adding Proc [Summary]\n" "stack base = %x\n stack_pointer = %x\n entry = %x\n", stack_base, stack_pointer, entrypoint);
     // Finding an empty slot in the proc_table
-    proc_t * slot = NULL;
+
+    int8_t pid = -1;
     for (int i = 0; i < MAX_PROC; i++) {
         if (proc_table[i].state == PROC_STATE_INACTIVE) {
             // DEBUG_PRINT("Chose slot %x", i);
-            slot = &proc_table[i];
+            pid = i;
             break;
         }
     }
 
-    if (slot == NULL) {
+    if (pid == -1) {
         return -ENOMEM;
     }
 
-    slot->PPID = parent;
-    slot->stack_base = stack_base;
-    slot->stack_ptr = stack_pointer;
-    slot->ELF_base = ELF_base;
-    slot->flags = flags;
-    slot->state = PROC_STATE_READY;
+    proc_table[pid].PPID = parent;
+    proc_table[pid].stack_base = stack_base;
+    proc_table[pid].stack_ptr = stack_pointer;
+    proc_table[pid].ELF_base = ELF_base;
+    proc_table[pid].flags = flags;
+    proc_table[pid].state = PROC_STATE_READY;
 
-    init_stack((uint32_t *)slot->stack_ptr, entrypoint);
-    return (uint32_t)slot;
+    // init_stack((uint32_t *)proc_table[pid].stack_ptr, entrypoint);
+    return pid;
 }
 
 proc_t * remove_proc(uint8_t PID) {
