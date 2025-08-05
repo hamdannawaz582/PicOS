@@ -15,3 +15,8 @@ git clone https://github.com/hamdannawaz582/PicOS
    1. `arm-none-eabi-gcc`
    2. `arm-none-eabi-ld`
    3. `arm-none-eabi-as`
+
+3. Run the Makefile
+```
+cd PicOS && make all
+```
