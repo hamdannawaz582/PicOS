@@ -50,4 +50,10 @@ SECTIONS {
         . = ALIGN(4);
         __bss_end = .;
     } > RAM
+
+    .heap_begin : {
+        . = ALIGN(4);
+        __kheap_start = .;
+        __uheap_start = ORIGIN(RAM) + LENGTH(RAM);
+    } > RAM
 }
