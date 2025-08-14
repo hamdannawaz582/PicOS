@@ -1,5 +1,6 @@
 /* alloc.c - kmem_init, kmalloc, kfree, kbrk */
 
+#include <stdbool.h>
 #include <kernel/alloc.h>
 #include <stddef.h>
 #include <kernel/panic.h>
@@ -23,6 +24,16 @@ void kmem_init(void) {
         current->next = (uint32_t *)(kbrk());
         current = (mem_block *)(current->next);
     }
+}
+
+static bool merge_blocks(mem_block * a, mem_block * b) {
+    if (a + a->size != b) {
+        return false; // Non-mergeable
+    }
+
+    a->next = b->next;
+    a->size += b->size + sizeof(mem_block);
+    return true;
 }
 
 void * kmalloc(size_t size) {
@@ -92,7 +103,64 @@ void * kmalloc(size_t size) {
 }
 
 void kfree(void * addr) {
+    if ((uint32_t)addr % sizeof(mem_block) != 0) {
+        DEBUG_PRINT("kfree: Invalid address %x", (uint32_t)addr);
+        return;
+    }
 
+    mem_block * returnaddr = (mem_block *)addr;
+    returnaddr = returnaddr - 1;
+
+    if (returnaddr->size <= 0 || returnaddr->size > 512 - sizeof(mem_block)) {
+        DEBUG_PRINT("kfree: Invalid size at address %x", (uint32_t)addr);
+        return;
+    }
+
+    if ((void *)(returnaddr->next) >= kheap_ptr || (uint8_t *)returnaddr->next < &__kheap_start) {
+        DEBUG_PRINT("kfree: Invalid next at address %x", (uint32_t)addr);
+        return;
+    }
+
+    mem_block * current = mem_block_head;
+    mem_block * prev = NULL;
+
+    if (current == NULL) {
+        mem_block_head = returnaddr;
+        return;
+    }
+
+    while ((current->next != NULL) && current < returnaddr) {
+        prev = current;
+        current = (mem_block *)current->next;
+    }
+
+    if (current->next == NULL) {
+        current->next = (uint32_t *)returnaddr;
+        return;
+    }
+
+    if (!prev) {
+        returnaddr->next = (uint32_t *)mem_block_head;
+        mem_block_head = returnaddr;
+        merge_blocks(mem_block_head, (mem_block *)mem_block_head->next);
+        return;
+    }
+
+    if (current == returnaddr) {
+        DEBUG_PRINT("kfree: Possible double free %x", (uint32_t)addr);
+        return;
+    }
+
+    returnaddr->next = prev->next;
+    prev->next = (uint32_t *)returnaddr;
+    if (merge_blocks(prev, (mem_block *)prev->next)) {
+        merge_blocks(prev, (mem_block *)prev->next);
+        return;
+    }
+
+    merge_blocks(returnaddr, (mem_block *)returnaddr->next);
+
+    return;
 }
 
 mem_block * kbrk(void) {

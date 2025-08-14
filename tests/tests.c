@@ -35,6 +35,7 @@ void run_all_tests(void) {
     TEST_CATEGORY("Allocator");
     RUN_TEST(test_allocator_init, "allocator_init");
     RUN_TEST(test_allocator_malloc, "allocator_add");
+    RUN_TEST(test_allocator_free, "allocator_free");
     TEST_CATEGORY("Memory");
 
 #endif
