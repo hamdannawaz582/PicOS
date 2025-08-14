@@ -26,8 +26,12 @@ void kmem_init(void) {
 }
 
 void * kmalloc(size_t size) {
-    if (size == 0) {
+    if (size <= 0) {
         return NULL;
+    }
+
+    if (mem_block_head == NULL) {
+        kbrk();
     }
 
     if (size % sizeof(mem_block) != 0) {
@@ -48,7 +52,8 @@ void * kmalloc(size_t size) {
     }
 
     if (chosen == NULL) {
-        return (void *)-ENOMEM; // TODO: Allocate another block to the kernel via kbrk
+        current->next = (uint32_t *)(kbrk());
+        return kmalloc(size);
     }
 
     if (chosen->size == size) {

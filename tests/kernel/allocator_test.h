@@ -31,7 +31,29 @@ bool test_allocator_malloc() {
         return false;
     }
 
-    if (kmalloc(512 - sizeof(mem_block)) == kmalloc(512 - sizeof(mem_block))) {
+    void *p1 = kmalloc(512 - sizeof(mem_block));
+    void *p2 = kmalloc(512 - sizeof(mem_block));
+    void *p3 = kmalloc(512 - sizeof(mem_block));
+    memset(p1, 0xFF, 512 - sizeof(mem_block));
+    memset(p2, 0xFF, 512 - sizeof(mem_block));
+    memset(p3, 0xFF, 512 - sizeof(mem_block));
+
+    void *p4 = kmalloc(512 - sizeof(mem_block));
+    void *p5 = kmalloc(512 - sizeof(mem_block));
+    void *p6 = kmalloc(512 - sizeof(mem_block));
+    memset(p4, 0xFF, 512 - sizeof(mem_block));
+    memset(p5, 0xFF, 512 - sizeof(mem_block));
+    memset(p6, 0xFF, 512 - sizeof(mem_block));
+
+    if (p1 == p2) {
+        return false;
+    }
+
+    if (p3 == p4) {
+        return false;
+    }
+
+    if (p5 == p6) {
         return false;
     }
 
