@@ -1,4 +1,4 @@
-/* stackops.c - init_stack */
+/* stackops.c - init_stack, extract_svcall_args */
 
 #include <stdint.h>
 
@@ -10,4 +10,8 @@ void init_stack(uint32_t *stack, uint32_t entry_point) {
     // DEBUG_PRINT("Putting xPSR @ %x\n", (uint32_t)stack + 15*sizeof(*stack));
     stack[15] = 0x41000000; // Dummy xPSR value i got off of another process
     stack[14] = entry_point;
+}
+
+uint32_t * extract_svcall_args(uint32_t * stack) {
+    return stack + 8;
 }
